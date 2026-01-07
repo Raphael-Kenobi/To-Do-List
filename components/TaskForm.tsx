@@ -61,13 +61,13 @@ export default function TaskForm({ onTaskAdded }: TaskFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+      <h2 className="text-lg font-semibold mb-4 text-gray-900">
         Nova Task
       </h2>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-md text-sm">
           {error}
         </div>
       )}
@@ -86,7 +86,7 @@ export default function TaskForm({ onTaskAdded }: TaskFormProps) {
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             placeholder="Ex: João Silva ou joao@email.com"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent"
             disabled={isSubmitting}
           />
         </div>
@@ -104,7 +104,7 @@ export default function TaskForm({ onTaskAdded }: TaskFormProps) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ex: Estudar TypeScript"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent"
             disabled={isSubmitting}
           />
         </div>
@@ -112,7 +112,7 @@ export default function TaskForm({ onTaskAdded }: TaskFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="w-full inline-flex items-center justify-center gap-2 bg-sky-600 text-white py-2 px-4 rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {isSubmitting ? 'Adicionando...' : 'Adicionar Task'}
         </button>
@@ -120,4 +120,3 @@ export default function TaskForm({ onTaskAdded }: TaskFormProps) {
     </form>
   )
 }
-

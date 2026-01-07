@@ -53,34 +53,40 @@ export default function TaskList({ userName }: TaskListProps) {
 
   if (isLoading) {
     return (
-      <div className="bg-white p-8 rounded-lg shadow-md text-center">
-        <p className="text-gray-600">Carregando tasks...</p>
+      <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm text-center">
+        <div className="flex items-center justify-center">
+          <div className="w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+        </div>
+        <p className="mt-3 text-sm text-gray-600">Carregando tasks...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+      <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+        <div className="p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded text-sm">
           {error}
         </div>
-        <button
-          onClick={fetchTasks}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Tentar novamente
-        </button>
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={fetchTasks}
+            className="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-400"
+          >
+            Tentar novamente
+          </button>
+        </div>
       </div>
     )
   }
 
   if (tasks.length === 0) {
     return (
-      <div className="bg-white p-8 rounded-lg shadow-md text-center">
-        <p className="text-gray-600">Nenhuma task encontrada.</p>
+      <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm text-center">
+        <div className="text-3xl">🗒️</div>
+        <p className="mt-3 text-gray-700 font-medium">Nenhuma task ainda</p>
         <p className="text-sm text-gray-500 mt-2">
-          Adicione uma nova task usando o formulário acima.
+          Use o formulário acima para criar sua primeira task.
         </p>
       </div>
     )
@@ -98,4 +104,3 @@ export default function TaskList({ userName }: TaskListProps) {
     </div>
   )
 }
-

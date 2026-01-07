@@ -101,9 +101,9 @@ export default function TaskItem({ task, onTaskUpdated }: TaskItemProps) {
   }
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+    <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-150">
       {error && (
-        <div className="mb-2 p-2 bg-red-100 border border-red-400 text-red-700 text-sm rounded">
+        <div className="mb-2 p-2 bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded">
           {error}
         </div>
       )}
@@ -114,7 +114,7 @@ export default function TaskItem({ task, onTaskUpdated }: TaskItemProps) {
           checked={task.completed}
           onChange={handleToggleComplete}
           disabled={isUpdating}
-          className="mt-1 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer disabled:opacity-50"
+          className="mt-1 w-5 h-5 text-sky-600 border-gray-300 rounded focus:ring-sky-400 cursor-pointer disabled:opacity-50"
         />
 
         <div className="flex-1 min-w-0">
@@ -124,7 +124,7 @@ export default function TaskItem({ task, onTaskUpdated }: TaskItemProps) {
                 type="text"
                 value={editedTitle}
                 onChange={(e) => setEditedTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400"
                 disabled={isUpdating}
                 autoFocus
               />
@@ -132,14 +132,14 @@ export default function TaskItem({ task, onTaskUpdated }: TaskItemProps) {
                 <button
                   onClick={handleSaveEdit}
                   disabled={isUpdating}
-                  className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:opacity-50"
+                  className="px-3 py-1 bg-emerald-600 text-white text-sm rounded hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                 >
                   Salvar
                 </button>
                 <button
                   onClick={handleCancelEdit}
                   disabled={isUpdating}
-                  className="px-3 py-1 bg-gray-300 text-gray-700 text-sm rounded hover:bg-gray-400 disabled:opacity-50"
+                  className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded hover:bg-gray-200 disabled:opacity-50 transition-colors"
                 >
                   Cancelar
                 </button>
@@ -148,16 +148,16 @@ export default function TaskItem({ task, onTaskUpdated }: TaskItemProps) {
           ) : (
             <div>
               <p
-                className={`text-gray-800 ${
+                className={`truncate ${
                   task.completed
-                    ? 'line-through text-gray-500'
-                    : 'font-medium'
+                    ? 'line-through text-gray-400 italic'
+                    : 'font-medium text-gray-800'
                 }`}
               >
                 {task.title}
               </p>
               <div className="mt-1 flex items-center gap-2 text-xs text-gray-500">
-                <span>{task.user_name}</span>
+                <span className="truncate">{task.user_name}</span>
                 <span>•</span>
                 <span>
                   {new Date(task.created_at).toLocaleDateString('pt-BR')}
@@ -171,7 +171,7 @@ export default function TaskItem({ task, onTaskUpdated }: TaskItemProps) {
           <button
             onClick={() => setIsEditing(true)}
             disabled={isUpdating}
-            className="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded disabled:opacity-50"
+            className="px-3 py-1 text-sm text-sky-600 hover:text-sky-800 hover:bg-sky-50 rounded disabled:opacity-50 transition-colors"
           >
             Editar
           </button>
@@ -180,4 +180,3 @@ export default function TaskItem({ task, onTaskUpdated }: TaskItemProps) {
     </div>
   )
 }
-

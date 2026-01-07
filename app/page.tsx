@@ -21,28 +21,35 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <header className="mb-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            To-Do List
-          </h1>
-          <p className="text-gray-600">
-            Gerencie suas tasks de forma simples e eficiente
-          </p>
-        </header>
+    <main className="min-h-screen py-12 px-4">
+      <div className="max-w-3xl mx-auto w-full">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 md:p-10">
+          <header className="mb-6 text-center">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-1">
+              To-Do List
+            </h1>
+            <p className="text-sm md:text-base text-gray-600">
+              Gerencie suas tasks de forma simples e eficiente
+            </p>
+          </header>
 
-        <div className="space-y-6">
-          <TaskForm onTaskAdded={handleTaskAdded} />
-          <div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              Suas Tasks
-            </h2>
-            <TaskList key={refreshKey} />
-          </div>
+          <section className="space-y-6">
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800 mb-3">
+                Nova Task
+              </h2>
+              <TaskForm onTaskAdded={handleTaskAdded} />
+            </div>
+
+            <div className="pt-4 border-t border-gray-100">
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">
+                Suas Tasks
+              </h2>
+              <TaskList key={refreshKey} />
+            </div>
+          </section>
         </div>
       </div>
     </main>
   )
 }
-
