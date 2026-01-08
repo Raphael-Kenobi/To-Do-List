@@ -1,11 +1,11 @@
 'use client'
 
 /**
- * Página principal da aplicação
+ * Main application page
  * 
- * Integra os componentes TaskForm e TaskList
- * Demonstra a arquitetura API-first onde o frontend
- * nunca acessa Supabase diretamente
+ * Integrates TaskForm and TaskList components
+ * Demonstrates API-first architecture where frontend
+ * never accesses Supabase directly
  */
 
 import { useState } from 'react'
@@ -16,7 +16,7 @@ export default function Home() {
   const [refreshKey, setRefreshKey] = useState(0)
 
   const handleTaskAdded = () => {
-    // Força atualização da lista de tasks
+    // Force task list update
     setRefreshKey((prev) => prev + 1)
   }
 
@@ -29,21 +29,21 @@ export default function Home() {
               To-Do List
             </h1>
             <p className="text-sm md:text-base text-gray-600">
-              Gerencie suas tasks de forma simples e eficiente
+              Manage your tasks in a simple and efficient way
             </p>
           </header>
 
           <section className="space-y-6">
             <div>
               <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                Nova Task
+                New Task
               </h2>
               <TaskForm onTaskAdded={handleTaskAdded} />
             </div>
 
             <div className="pt-4 border-t border-gray-100">
               <h2 className="text-lg font-semibold text-gray-800 mb-4">
-                Suas Tasks
+                Your Tasks
               </h2>
               <TaskList key={refreshKey} />
             </div>
