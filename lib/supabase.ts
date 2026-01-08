@@ -14,9 +14,20 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
+// Debug log para ajudar a identificar o problema
 if (!supabaseUrl || !supabaseServiceRoleKey) {
+  console.error('Supabase Config Error:', {
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseServiceRoleKey,
+    env: process.env.NODE_ENV
+  })
+  
+  const missing = []
+  if (!supabaseUrl) missing.push('NEXT_PUBLIC_SUPABASE_URL')
+  if (!supabaseServiceRoleKey) missing.push('SUPABASE_SERVICE_ROLE_KEY')
+
   throw new Error(
-    'Missing Supabase environment variables. Please check your .env file.'
+    `Missing Supabase environment variables: ${missing.join(', ')}. Please check your .env.local file and restart the server.`
   )
 }
 
@@ -31,4 +42,3 @@ export const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
     persistSession: false,
   },
 })
-

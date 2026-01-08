@@ -1,19 +1,19 @@
 # To-Do List Challenge
 
-Aplicação de To-Do List construída com Next.js, TypeScript, Tailwind CSS e Supabase, seguindo uma arquitetura API-first preparada para automações com N8N e integrações com LLMs.
+To-Do List application built with Next.js, TypeScript, Tailwind CSS, and Supabase, following an API-first architecture prepared for N8N automations and LLM integrations.
 
-## 🏗️ Arquitetura
+## 🏗️ Architecture
 
-### Princípios de Design
+### Design Principles
 
-**API-First Architecture**: O frontend **nunca** acessa o Supabase diretamente. Todas as operações de banco de dados passam pelas API Routes do Next.js (`/app/api/tasks/route.ts`). Isso oferece:
+**API-First Architecture**: The frontend **never** accesses Supabase directly. All database operations go through Next.js API Routes (`/app/api/tasks/route.ts`). This offers:
 
-- **Separação de responsabilidades**: Lógica de negócio centralizada nas API routes
-- **Preparação para automações**: Fácil adicionar webhooks N8N após operações
-- **Segurança**: Credenciais do Supabase nunca expostas no cliente
-- **Extensibilidade**: Pode adicionar validação, transformação de dados, e integrações sem modificar o frontend
+- **Separation of concerns**: Business logic centralized in API routes
+- **Automation readiness**: Easy to add N8N webhooks after operations
+- **Security**: Supabase credentials never exposed to the client
+- **Extensibility**: Can add validation, data transformation, and integrations without modifying the frontend
 
-### Fluxo de Dados
+### Data Flow
 
 ```
 Frontend (React Components)
@@ -23,7 +23,7 @@ API Routes (/app/api/tasks/route.ts)
 Supabase Database
 ```
 
-### Estrutura do Projeto
+### Project Structure
 
 ```
 todo-list-challenge/
@@ -31,35 +31,35 @@ todo-list-challenge/
 │   ├── api/
 │   │   └── tasks/
 │   │       └── route.ts          # API routes (GET, POST, PATCH)
-│   ├── globals.css               # Estilos globais Tailwind
-│   ├── layout.tsx                # Layout raiz
-│   └── page.tsx                  # Página principal
+│   ├── globals.css               # Global Tailwind styles
+│   ├── layout.tsx                # Root layout
+│   └── page.tsx                  # Main page
 ├── components/
-│   ├── TaskForm.tsx              # Formulário para adicionar tasks
-│   ├── TaskItem.tsx              # Componente individual de task
-│   └── TaskList.tsx              # Lista de tasks
+│   ├── TaskForm.tsx              # Form to add tasks
+│   ├── TaskItem.tsx              # Individual task component
+│   └── TaskList.tsx              # List of tasks
 ├── lib/
-│   └── supabase.ts              # Cliente Supabase (server-side apenas)
+│   └── supabase.ts              # Supabase client (server-side only)
 └── ...
 ```
 
 ## 🚀 Setup
 
-### Pré-requisitos
+### Prerequisites
 
-- Node.js 18+ instalado
-- Conta no Supabase (gratuita)
+- Node.js 18+ installed
+- Supabase account (free)
 
-### 1. Instalar Dependências
+### 1. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Configurar Supabase
+### 2. Configure Supabase
 
-1. Crie um projeto no [Supabase](https://supabase.com)
-2. Vá em **SQL Editor** e execute o seguinte SQL para criar a tabela:
+1. Create a project on [Supabase](https://supabase.com)
+2. Go to **SQL Editor** and execute the following SQL to create the table:
 
 ```sql
 CREATE TABLE tasks (
@@ -70,70 +70,75 @@ CREATE TABLE tasks (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Opcional: Criar índice para melhor performance
+-- Optional: Create index for better performance
 CREATE INDEX idx_tasks_user_name ON tasks(user_name);
 CREATE INDEX idx_tasks_created_at ON tasks(created_at DESC);
 ```
 
-3. No painel do Supabase, vá em **Settings > API**
-4. Copie a **URL do projeto** e a **anon key**
-5. Para usar a Service Role Key (recomendado para este desafio), copie também a **service_role key** (mantenha-a segura!)
+3. In the Supabase dashboard, go to **Settings > API**
+4. Copy the **Project URL** and the **anon key**
+5. To use the Service Role Key (recommended for this challenge), also copy the **service_role key** (keep it safe!)
 
-### 3. Configurar Variáveis de Ambiente
+### 3. Configure Environment Variables
 
-1. Copie o arquivo `.env.example` para `.env`:
+1. Copy the `.env.example` file to `.env.local`:
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
-2. Edite o arquivo `.env` e preencha com suas credenciais:
+2. Edit the `.env.local` file and fill in your credentials:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=sua_url_do_supabase
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_anon_key
-SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Lovable
+LOVABLE_API_KEY=your_lovable_api_key
+LOVABLE_PROJECT_ID=your_lovable_project_id
 ```
 
-### 4. Executar o Projeto
+### 4. Run the Project
 
 ```bash
 npm run dev
 ```
 
-Acesse [http://localhost:3000](http://localhost:3000)
+Access [http://localhost:3000](http://localhost:3000)
 
-## 📋 Funcionalidades
+## 📋 Features
 
-- ✅ Adicionar novas tasks
-- ✅ Marcar tasks como completas/incompletas
-- ✅ Editar título de tasks
-- ✅ Persistência no banco de dados (não usa localStorage)
-- ✅ Cada task armazena um identificador de usuário (nome ou email)
+- ✅ Add new tasks
+- ✅ Mark tasks as complete/incomplete
+- ✅ Edit task titles
+- ✅ Database persistence (does not use localStorage)
+- ✅ Each task stores a user identifier (name or email)
 
-## 🔮 Preparação para o Futuro
+## 🔮 Future Readiness
 
-A arquitetura está preparada para extensões futuras:
+The architecture is prepared for future extensions:
 
 ### N8N Webhooks
 
-No arquivo `/app/api/tasks/route.ts`, há comentários indicando onde adicionar chamadas de webhook:
+In `/app/api/tasks/route.ts`, there are comments indicating where to add webhook calls:
 
 ```typescript
-// TODO: Futuro - Chamar webhook N8N aqui
+// TODO: Future - Call N8N webhook here
 // await fetch(N8N_WEBHOOK_URL, { method: 'POST', body: JSON.stringify(data) })
 ```
 
-### Integração com LLM
+### LLM Integration
 
-Também há espaço preparado para melhorar títulos de tasks com LLM:
+There is also space prepared to enhance task titles with LLM:
 
 ```typescript
-// TODO: Futuro - Melhorar título com LLM aqui se necessário
+// TODO: Future - Enhance title with LLM here if necessary
 // const enhancedTitle = await enhanceTitleWithLLM(title)
 ```
 
-## 🛠️ Tecnologias
+## 🛠️ Technologies
 
 - **Next.js 14** (App Router)
 - **TypeScript**
@@ -141,22 +146,21 @@ Também há espaço preparado para melhorar títulos de tasks com LLM:
 - **Supabase** (PostgreSQL)
 - **Vercel** (deploy target)
 
-## 📝 Notas de Implementação
+## 📝 Implementation Notes
 
-- **Sem autenticação**: Conforme especificado, não há sistema de autenticação
-- **Service Role Key**: Usada para bypassar RLS, permitindo operações diretas no banco
-- **Validação básica**: Validação mínima nas API routes (pode ser estendida)
-- **Error handling**: Tratamento de erros básico implementado
-- **UI minimalista**: Interface limpa e funcional usando Tailwind CSS
+- **No authentication**: As specified, there is no authentication system
+- **Service Role Key**: Used to bypass RLS, allowing direct database operations
+- **Basic validation**: Minimal validation in API routes (can be extended)
+- **Error handling**: Basic error handling implemented
+- **Minimalist UI**: Clean and functional interface using Tailwind CSS
 
-## 🚢 Deploy na Vercel
+## 🚢 Deploy on Vercel
 
-1. Faça push do código para um repositório Git
-2. Conecte o repositório na Vercel
-3. Adicione as variáveis de ambiente no painel da Vercel
-4. Deploy automático!
+1. Push the code to a Git repository
+2. Connect the repository to Vercel
+3. Add the environment variables in the Vercel dashboard
+4. Automatic deploy!
 
-## 📄 Licença
+## 📄 License
 
-Este é um projeto de desafio técnico.
-
+This is a technical challenge project.
