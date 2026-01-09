@@ -4,50 +4,44 @@ import { supabase } from '@/lib/supabase'
 // N8N Webhook URL
 const N8N_WEBHOOK_URL = 'https://challenge-tasks.app.n8n.cloud/webhook/task-list'
 
-/**
- * POST /api/tasks/[id]/notes
- * Adds a note to a task and triggers the AI webhook
- */
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    // 1. Get Task ID from URL params
     const taskId = params.id
-    
-    // Robust body parsing (Lógica equivalente ao snippet que você enviou, adaptada para App Router)
-    // Garante que o JSON seja lido mesmo se o header Content-Type estiver faltando
-    let body;
-    try {
-      body = await request.json();
-    } catch (e) {
-      // Se falhar (ex: enviado como texto puro), tentamos ler como texto e fazer o parse manual
-      try {
-        const text = await request.text();
-        if (text) {
-          body = JSON.parse(text);
-        } else {
-          body = {};
-        }
-      } catch (textError) {
-        return NextResponse.json(
-          { error: 'Invalid JSON body' },
-          { status: 400 }
-        );
-      }
-    }
 
-    // Aceita tanto 'note' (usado pelo frontend) quanto 'content' (comum em webhooks/n8n)
-    const noteContent = body.note || body.content
-
-    if (!taskId || !noteContent) {
+    if (!taskId) {
       return NextResponse.json(
-        { error: 'Task ID and note content are required' },
+        { error: 'Task ID is required' },
         { status: 400 }
       )
     }
 
-    // 1. Verify task exists and get its title
+    // 2. Parse Body
+    let body
+    try {
+      body = await request.json()
+    } catch (error) {
+      return NextResponse.json(
+        { error: 'Invalid JSON body' },
+        { status: 400 }
+      )
+    }
+
+    // 3. Validate Content
+    // Support 'content' (requested) or 'note' (backward compatibility)
+    const content = body.content || body.note
+
+    if (!content || typeof content !== 'string' || !content.trim()) {
+      return NextResponse.json(
+        { error: 'Note content is required' },
+        { status: 400 }
+      )
+    }
+
+    // 4. Verify Task Exists
     const { data: task, error: taskError } = await supabase
       .from('tasks')
       .select('title')
@@ -61,13 +55,13 @@ export async function POST(
       )
     }
 
-    // 2. Save note to database
+    // 5. Insert Note
     const { data: noteData, error: noteError } = await supabase
       .from('task_notes')
       .insert([
         {
           task_id: taskId,
-          content: noteContent.trim()
+          content: content.trim()
         }
       ])
       .select()
@@ -76,33 +70,32 @@ export async function POST(
     if (noteError) {
       console.error('Error saving note:', noteError)
       return NextResponse.json(
-        { error: 'Error saving note' },
+        { error: 'Failed to save note' },
         { status: 500 }
       )
     }
 
-    // 3. Trigger N8N Webhook
+    // 6. Trigger Webhook (Fire and forget)
     try {
       await fetch(N8N_WEBHOOK_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           task_id: taskId,
           task_title: task.title,
-          note: noteContent.trim()
+          note: content.trim()
         })
       })
     } catch (webhookError) {
-      console.error('Error triggering AI webhook:', webhookError)
+      console.error('Webhook error:', webhookError)
     }
 
-    return NextResponse.json({ note: noteData }, { status: 201 })
+    return NextResponse.json(noteData, { status: 201 })
+
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('API Error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     )
   }
