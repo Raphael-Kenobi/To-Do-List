@@ -14,7 +14,29 @@ export async function POST(
 ) {
   try {
     const taskId = params.id
-    const body = await request.json()
+    
+    // Robust body parsing to handle cases where Content-Type might be missing
+    let body;
+    try {
+      // Try standard JSON parsing
+      body = await request.json();
+    } catch (e) {
+      // If that fails, try reading as text and parsing manually
+      try {
+        const text = await request.text();
+        if (text) {
+          body = JSON.parse(text);
+        } else {
+          body = {};
+        }
+      } catch (textError) {
+        return NextResponse.json(
+          { error: 'Invalid JSON body' },
+          { status: 400 }
+        );
+      }
+    }
+
     const { note } = body
 
     if (!taskId || !note) {
