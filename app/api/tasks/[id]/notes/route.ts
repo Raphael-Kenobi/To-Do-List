@@ -15,13 +15,13 @@ export async function POST(
   try {
     const taskId = params.id
     
-    // Robust body parsing to handle cases where Content-Type might be missing
+    // Robust body parsing (Lógica equivalente ao snippet que você enviou, adaptada para App Router)
+    // Garante que o JSON seja lido mesmo se o header Content-Type estiver faltando
     let body;
     try {
-      // Try standard JSON parsing
       body = await request.json();
     } catch (e) {
-      // If that fails, try reading as text and parsing manually
+      // Se falhar (ex: enviado como texto puro), tentamos ler como texto e fazer o parse manual
       try {
         const text = await request.text();
         if (text) {
@@ -37,9 +37,10 @@ export async function POST(
       }
     }
 
-    const { note } = body
+    // Aceita tanto 'note' (usado pelo frontend) quanto 'content' (comum em webhooks/n8n)
+    const noteContent = body.note || body.content
 
-    if (!taskId || !note) {
+    if (!taskId || !noteContent) {
       return NextResponse.json(
         { error: 'Task ID and note content are required' },
         { status: 400 }
@@ -66,7 +67,7 @@ export async function POST(
       .insert([
         {
           task_id: taskId,
-          content: note.trim()
+          content: noteContent.trim()
         }
       ])
       .select()
@@ -81,8 +82,6 @@ export async function POST(
     }
 
     // 3. Trigger N8N Webhook
-    // We do this asynchronously but await it to ensure it was sent
-    // In a production app, this might be a background job
     try {
       await fetch(N8N_WEBHOOK_URL, {
         method: 'POST',
@@ -92,12 +91,11 @@ export async function POST(
         body: JSON.stringify({
           task_id: taskId,
           task_title: task.title,
-          note: note.trim()
+          note: noteContent.trim()
         })
       })
     } catch (webhookError) {
       console.error('Error triggering AI webhook:', webhookError)
-      // We don't fail the request if the webhook fails, but we log it
     }
 
     return NextResponse.json({ note: noteData }, { status: 201 })
