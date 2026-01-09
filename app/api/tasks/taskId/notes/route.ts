@@ -8,11 +8,10 @@ const supabase = createClient(
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { taskId: string } }
 ) {
   try {
-    // Adaptado de params.taskId para params.id pois a pasta se chama [id]
-    const taskId = params.id;
+    const taskId = params.taskId;
 
     if (!taskId) {
       return NextResponse.json(
